@@ -110,17 +110,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script lang="ts" setup>
+import { ref } from "vue";
 
-@Options({
-  props: {
-    msg: String,
-  },
-})
-export default class HelloWorld extends Vue {
-  msg!: string;
-}
+import type { Ref } from "vue";
+
+const msg: Ref<string> = ref("Hello");
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

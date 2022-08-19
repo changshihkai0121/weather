@@ -1,12 +1,26 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
-  </div>
+  <div class="home-page"></div>
 </template>
 
 <script lang="ts" setup>
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+import { onBeforeMount } from "vue";
+import { useStore } from "vuex";
+// import fontAwesomeIcon from "vue-cli-plugin-fontawesome";
 
-console.log(process.env);
+const store = useStore();
+
+onBeforeMount(async () => {
+  try {
+    // const data = await store.dispatch("searchWeather", "Taiwan");
+    // console.log(data);
+  } catch (error) {
+    console.log("error", error);
+    store.commit("SET_GLOBAL_ERROR", false);
+  }
+});
 </script>
+
+<style lang="scss">
+.home-page {
+}
+</style>

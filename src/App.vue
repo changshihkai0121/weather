@@ -1,30 +1,56 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view />
+  <div class="app-content">
+    <div v-if="isLoading" class="default-skeleton">
+      <weather-location :is-skeleton="isLoading" />
+      <weather-status :is-skeleton="isLoading" />
+      <weather-temperature :is-skeleton="isLoading" />
+    </div>
+    <router-view v-else />
+  </div>
 </template>
 
+<script lang="ts" setup>
+import "@/assets/css/reset.css";
+import { ref, onBeforeMount } from "vue";
+import { useStore } from "vuex";
+
+import type { Ref } from "vue";
+import WeatherLocation from "./components/WeatherLocation.vue";
+import WeatherTemperature from "./components/WeatherTemperature.vue";
+import WeatherStatus from "./components/WeatherStatus.vue";
+
+const store = useStore();
+
+const isLoading: Ref<boolean> = ref(true);
+
+onBeforeMount(async () => {
+  try {
+    await store.dispatch("getTaiwanWeather");
+  } catch (error) {
+    console.log(error);
+  } finally {
+    // isLoading.value = false;
+  }
+});
+</script>
+
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+@import url("@/assets/css/main.scss");
+
+.app-content {
+  max-width: 1020px;
+  width: 100%;
+  margin: 0 auto;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.default-skeleton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 </style>

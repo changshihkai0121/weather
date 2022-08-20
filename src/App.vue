@@ -1,37 +1,11 @@
 <template>
   <div class="app-content">
-    <div v-if="isLoading" class="default-skeleton">
-      <weather-location :is-skeleton="isLoading" />
-      <weather-status :is-skeleton="isLoading" />
-      <weather-temperature :is-skeleton="isLoading" />
-    </div>
-    <router-view v-else />
+    <router-view />
   </div>
 </template>
 
 <script lang="ts" setup>
 import "@/assets/css/reset.css";
-import { ref, onBeforeMount } from "vue";
-import { useStore } from "vuex";
-
-import type { Ref } from "vue";
-import WeatherLocation from "./components/WeatherLocation.vue";
-import WeatherTemperature from "./components/WeatherTemperature.vue";
-import WeatherStatus from "./components/WeatherStatus.vue";
-
-const store = useStore();
-
-const isLoading: Ref<boolean> = ref(true);
-
-onBeforeMount(async () => {
-  try {
-    await store.dispatch("getTaiwanWeather");
-  } catch (error) {
-    console.log(error);
-  } finally {
-    // isLoading.value = false;
-  }
-});
 </script>
 
 <style lang="scss">
@@ -45,12 +19,14 @@ onBeforeMount(async () => {
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
+  .v-enter-active,
+  .v-leave-active {
+    transition: opacity 0.5s ease;
+  }
 
-.default-skeleton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  .v-enter-from,
+  .v-leave-to {
+    opacity: 0;
+  }
 }
 </style>

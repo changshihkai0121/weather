@@ -1,39 +1,35 @@
 <template>
-  <div class="weather-status">
-    <div v-if="isSkeleton" class="weather-location__skeleton" />
-    <p v-else>{{ location }}</p>
-  </div>
+  <p class="weather-status">{{ statusDescription }}</p>
 </template>
 
-<script lang="ts">
-export default {
-  name: "WeatherStatus",
-  props: {
-    isSkeleton: {
-      type: Boolean,
-      default: false,
-    },
-    status: {
-      type: String,
-      default: "",
-    },
-  },
-};
+<script lang="ts" setup>
+import type { Weather } from "@/store/types/weatherType";
+import { defineProps, computed } from "vue";
+
+interface Props {
+  status?: Weather | Array<Weather>;
+}
+
+const props = defineProps<Props>();
+const statusDescription = computed((): string => {
+  if (!props?.status) {
+    return "NA";
+  }
+
+  if (Array.isArray(props.status)) {
+    return props.status.map(({ description }) => description).join(",");
+  }
+
+  return props.status?.description || "NA";
+});
 </script>
 
 <style lang="scss">
-.weather-location {
-  display: flex;
+.weather-status {
   color: #fff;
-  align-items: center;
-  justify-content: center;
   position: relative;
-  width: 100%;
-  &__skeleton {
-    width: 50%;
-    background-color: #ccc;
-    height: 24px;
-    position: relative;
-  }
+  text-transform: capitalize;
+  margin-top: 20px;
+  font-family: "Roboto", Avenir, Helvetica, Arial, sans-serif;
 }
 </style>

@@ -1,24 +1,14 @@
-# weather
+# Weather App
 
 ## Project setup
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+## Project notice
 ```
-yarn serve
+1. should use latest node 14 version.
+2. need yarn install
+3. please check .env file has VUE_APP_WEATHER_API_KEY variable.
+4. should use Compiles and hot-reloads for development.(use yarn serve) 
 ```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

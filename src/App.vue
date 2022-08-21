@@ -2,10 +2,12 @@
   <div class="app-content">
     <router-view />
   </div>
+  <ErrorNotice />
 </template>
 
 <script lang="ts" setup>
 import "@/assets/css/reset.css";
+import ErrorNotice from "@/components/ErrorNotice.vue";
 </script>
 
 <style lang="scss">
@@ -19,6 +21,7 @@ import "@/assets/css/reset.css";
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: auto;
   .v-enter-active,
   .v-leave-active {
     transition: opacity 0.5s ease;

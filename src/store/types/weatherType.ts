@@ -19,6 +19,7 @@ export interface Main {
   humidity: number;
   sea_level: number;
   grnd_level: number;
+  temp_kf?: number;
 }
 
 export interface Wind {
@@ -37,6 +38,7 @@ export interface Sys {
   country: string;
   sunrise: number;
   sunset: number;
+  pod?: string;
 }
 
 export interface CurrentWeather {
@@ -53,4 +55,5 @@ export interface CurrentWeather {
   id: number;
   name: string;
   cod: number;
+  message?: string;
 }

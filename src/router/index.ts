@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import DetailView from "@/views/DetailView.vue";
+import ErrorView from "@/views/ErrorView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -9,9 +10,14 @@ const routes: Array<RouteRecordRaw> = [
     component: HomeView,
   },
   {
-    path: "/detail",
+    path: "/detail/:area",
     name: "detail",
     component: DetailView,
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: ErrorView,
   },
 ];
 

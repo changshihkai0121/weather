@@ -2,12 +2,15 @@ import { createStore } from "vuex";
 import axios from "axios";
 
 import type { CurrentWeather } from "@/store/types/weatherType";
+import type { CurrentWeatherList } from "@/store/types/weatherListType";
 
 export default createStore({
   state: {
     isLoading: false,
     globalError: "",
     locationWeather: null,
+    noticeError: null,
+    searchResult: {},
   },
   getters: {
     getLoadingStatus(state) {
@@ -15,6 +18,12 @@ export default createStore({
     },
     twWeather(state) {
       return state.locationWeather;
+    },
+    getNoticeError(state) {
+      return state.noticeError;
+    },
+    getOrderResults(state) {
+      return state.searchResult;
     },
   },
   mutations: {
@@ -27,17 +36,28 @@ export default createStore({
     SET_TAIWAN_WEATHER(state, weather) {
       state.locationWeather = weather;
     },
+    SET_ERROR_NOTICE(state, notice) {
+      state.noticeError = notice?.message || notice;
+    },
+    SET_SEARCH_RESULT(state, { site, data }) {
+      if (!state.searchResult) {
+        state.searchResult = {};
+      }
+
+      const context: Record<string, Array<CurrentWeather>> = state.searchResult;
+
+      context[site] = data;
+    },
   },
   actions: {
     async getTaiwanWeather({ commit }): Promise<CurrentWeather> {
       try {
         commit("SET_LOADING", true);
 
-        // const openWeatherKey = process.env.VUE_APP_WEATHER_API_KEY;
+        const openWeatherKey = process.env.VUE_APP_WEATHER_API_KEY;
 
         const { data }: { data: CurrentWeather } = await axios.get(
-          `/mock_api/v3/4f4ad2ae-5ab1-400a-a913-018b69ffd248`
-          // `/weather_api/data/2.5/weather?q=Taiwan&units=metric&appid=${openWeatherKey}`
+          `/weather_api/data/2.5/weather?q=Taiwan&units=metric&appid=${openWeatherKey}`
         );
 
         commit("SET_TAIWAN_WEATHER", data);
@@ -49,46 +69,40 @@ export default createStore({
         commit("SET_LOADING", false);
       }
     },
-    async getSearchWeatherContent({ commit }, site): Promise<CurrentWeather> {
+    async getSearchWeatherContent(_store, site): Promise<CurrentWeather> {
       try {
         if (!site) {
           throw new Error("The site is required.");
         }
-
-        commit("SET_LOADING", true);
-        // const openWeatherKey = process.env.VUE_APP_WEATHER_API_KEY;
+        const openWeatherKey = process.env.VUE_APP_WEATHER_API_KEY;
 
         const { data }: { data: CurrentWeather } = await axios.get(
-          `/v3/933253d7-79b2-4bda-8432-b64065366c3d`
-          // `/weather_api/data/2.5/weather?q=Taiwan&units=metric&appid=${openWeatherKey}`
+          `/weather_api/data/2.5/weather?q=${site}&units=metric&appid=${openWeatherKey}`
         );
-
-        commit("SET_TAIWAN_WEATHER", data);
 
         return Promise.resolve(data);
       } catch (error) {
         return Promise.reject(error);
-      } finally {
-        commit("SET_LOADING", false);
       }
     },
-    async getWeatherDetail({ commit }, site) {
+    async getWeatherDetail({ commit }, site): Promise<CurrentWeatherList> {
       try {
         commit("SET_LOADING", true);
-        // const openWeatherKey = process.env.VUE_APP_WEATHER_API_KEY;
+        const openWeatherKey = process.env.VUE_APP_WEATHER_API_KEY;
 
         if (!site) {
           throw new Error("The site is required.");
         }
 
         const { data } = await axios.get(
-          `/mock_api/v3/b77136fc-ed9f-410c-9b37-3ec0363f4629`
-          // `/weather_api/data/2.5/forecast?q=${site}&units=metric&appid=${openWeatherKey}`
+          `/weather_api/data/2.5/forecast?q=${site}&units=metric&appid=${openWeatherKey}`
         );
+
+        commit("SET_SEARCH_RESULT", { site, data });
 
         return Promise.resolve(data);
       } catch (error) {
-        commit("SET_GLOBAL_ERROR", false);
+        commit("SET_GLOBAL_ERROR", error);
 
         return Promise.reject(error);
       } finally {

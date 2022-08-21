@@ -67,14 +67,19 @@ const changeToSearch = (): void => {
   isVisibleSearchPopup.value = true;
 };
 const changeToDetail = (): void => {
-  console.log("click");
+  router.push({
+    name: "detail",
+    params: {
+      area: "taiwan",
+    },
+  });
 };
 
 onBeforeMount(async () => {
   try {
     await store.dispatch("getTaiwanWeather");
   } catch (error) {
-    console.log(error);
+    store.commit("SET_ERROR_NOTICE", error);
   }
 });
 </script>

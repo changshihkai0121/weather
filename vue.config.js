@@ -3,6 +3,7 @@ const proxy = require("http-proxy-middleware");
 
 module.exports = defineConfig({
   transpileDependencies: true,
+
   devServer: {
     proxy: {
       "/weather_api": {
